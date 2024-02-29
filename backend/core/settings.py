@@ -158,7 +158,7 @@ AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24  # one day
 AUTH_COOKIE_SECURE = getenv("AUTH_COOKIE_SECURE", "True") == "True"
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = "/"
-AUTH_COOKIE_SAMESITE = "SameSite"
+AUTH_COOKIE_SAMESITE = "strict"
 
 # Email settings
 EMAIL_BACKEND = "django_ses.SESBackend"
