@@ -19,7 +19,6 @@ from django.core.management.utils import get_random_secret_key
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 dotenv_file = BASE_DIR / ".env"
-
 if path.isfile(dotenv_file):
     load_dotenv(dotenv_file)
 
@@ -141,9 +140,7 @@ AUTH_USER_MODEL = "users.UserAccount"
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "utils.exceptions.custom_exception_handler",
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication"
-    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": ["users.authentication.CustomJWTAuthentication"],
 }
 
 DJOSER = {
@@ -154,3 +151,24 @@ DJOSER = {
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
     "TOKEN_MODEL": None,
 }
+
+AUTH_COOKIE = "access"
+AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 5  # 5 minutes
+AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24  # one day
+AUTH_COOKIE_SECURE = getenv("AUTH_COOKIE_SECURE", "True") == "True"
+AUTH_COOKIE_HTTP_ONLY = True
+AUTH_COOKIE_PATH = "/"
+AUTH_COOKIE_SAMESITE = "SameSite"
+
+# Email settings
+EMAIL_BACKEND = "django_ses.SESBackend"
+DEFAULT_FROM_EMAIL = getenv("AWS_SES_FROM_EMAIL")
+AWS_SES_ACCESS_KEY_ID = getenv("AWS_SES_ACCESS_KEY_ID")
+AWS_SES_SECRET_ACCESS_KEY = getenv("AWS_SES_SECRET_ACCESS_KEY")
+AWS_SES_REGION_NAME = getenv("AWS_SES_REGION_NAME")
+AWS_SES_REGION_ENDPOINT = f"email.{AWS_SES_REGION_NAME}.amazonaws.com"
+AWS_SES_FROM_EMAIL = getenv("AWS_SES_FROM_EMAIL")
+USE_SES_V2 = True
+
+SITE_NAME = "JWT Auth"
+DOMAIN = getenv("DOMAIN")
