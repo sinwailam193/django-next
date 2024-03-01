@@ -8,13 +8,16 @@ cryptography==42.0.5
 defusedxml==0.8.0rc2
 Django==5.0.2
 django-ses==3.5.2
+django-storages==1.14.2
 django-templated-mail==1.1.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 djoser==2.2.2
+gunicorn==21.2.0
 idna==3.6
 jmespath==1.0.1
 oauthlib==3.2.2
+packaging==23.2
 psycopg2-binary==2.9.9
 pycparser==2.21
 PyJWT==2.8.0

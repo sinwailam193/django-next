@@ -28,6 +28,8 @@ if path.isfile(dotenv_file):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
+DEVELOPMENT_MODE = getenv("DEBUG", "False") == "True"
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv("DEBUG", "False") == "True"
 
@@ -45,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "social_django",
     "djoser",
+    "storages",
     "users",
 ]
 
@@ -126,11 +129,26 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
+if DEVELOPMENT_MODE is True:
+    STATIC_URL = "static/"
+    STATIC_ROOT = BASE_DIR / "static"
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = BASE_DIR / "media"
+else:
+    AWS_S3_ACCESS_KEY_ID = getenv("AWS_S3_ACCESS_KEY_ID")
+    AWS_S3_SECRET_ACCESS_KEY = getenv("AWS_S3_SECRET_ACCESS_KEY")
+    AWS_S3_REGION_NAME = getenv("AWS_S3_REGION_NAME")
+    AWS_S3_ENDPOINT_URL = f"https://{AWS_S3_REGION_NAME}.digitaloceanspaces.com"
+    AWS_STORAGE_BUCKET_NAME = getenv("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}  # one day
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_LOCATION = "static"
+    AWS_S3_CUSTOM_DOMAIN = getenv("AWS_S3_CUSTOM_DOMAIN")
+    STORAGES = {
+        "default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"},
+        "staticfiles": {"BACKEND": "storages.backends.s3boto3.S3StaticStorage"},
+    }
 
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "static"
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
