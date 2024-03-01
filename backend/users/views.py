@@ -1,14 +1,22 @@
+from datetime import datetime, timezone
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from djoser.social.views import ProviderAuthView
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
+    HTTP_500_INTERNAL_SERVER_ERROR,
+)
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,  # create token view
     TokenRefreshView,  # refresh token view
     TokenVerifyView,  # verify token view
 )
 from utils.cookies import set_cookie
+from utils.const import INTERNAL_SERVER_ERROR
+from .models import UserAccount
 
 
 class CustomProviderAuthView(ProviderAuthView):
@@ -16,11 +24,19 @@ class CustomProviderAuthView(ProviderAuthView):
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == HTTP_201_CREATED:
+            try:
+                UserAccount.objects.filter(email=response.data.get("user")).update(
+                    last_login=datetime.now(tz=timezone.utc)
+                )
+            except:
+                raise Response(
+                    INTERNAL_SERVER_ERROR, status=HTTP_500_INTERNAL_SERVER_ERROR
+                )
             access_token = response.data.get("access")
             refresh_token = response.data.get("refresh")
             set_cookie(response, access_token=access_token, refresh_token=refresh_token)
 
-        return response
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -28,11 +44,19 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         response = super().post(request, *args, **kwargs)
 
         if response.status_code == HTTP_200_OK:
+            try:
+                UserAccount.objects.filter(email=request.data.get("email")).update(
+                    last_login=datetime.now(tz=timezone.utc)
+                )
+            except:
+                raise Response(
+                    INTERNAL_SERVER_ERROR, status=HTTP_500_INTERNAL_SERVER_ERROR
+                )
             access_token = response.data.get("access")
             refresh_token = response.data.get("refresh")
             set_cookie(response, access_token=access_token, refresh_token=refresh_token)
 
-        return response
+        return Response(status=HTTP_204_NO_CONTENT)
 
 
 class CustomTokenRefreshView(TokenRefreshView):
