@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 
-import { Navbar, Footer } from "@/components/common";
+import { Navbar, Footer, Setup } from "@/components/common";
 import ReduxProvider from "@/slice/provider";
 
 import "@/styles/globals.css";
@@ -20,6 +20,7 @@ export default function RootLayout({ children }) {
                     <Navbar />
                     {children}
                     <Footer />
+                    <Setup />
                 </ReduxProvider>
             </body>
         </html>

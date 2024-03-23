@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
+import { Spinner } from "@/components/common";
 import { useRegisterMutation } from "@/slice/features/authApiSlice";
 
 export default function SignupForm() {
+    const router = useRouter();
     const [register, { isLoading }] = useRegisterMutation();
     const [formData, setFormData] = useState({
         firstName: "",
@@ -29,7 +33,15 @@ export default function SignupForm() {
     function handleSubmit(event) {
         event.preventDefault();
 
-        register(formData).unwrap();
+        register(formData)
+            .unwrap()
+            .then(() => {
+                toast.success("Please check email to verify account.");
+                router.push("/auth/login");
+            })
+            .catch(() => {
+                toast.error("Failed to register account.");
+            });
     }
 
     return (
@@ -152,7 +164,7 @@ export default function SignupForm() {
                             type="submit"
                             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
-                            Sign up
+                            {isLoading ? <Spinner sm /> : "Sign up"}
                         </button>
                     </div>
                 </form>

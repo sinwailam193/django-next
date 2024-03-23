@@ -19,6 +19,13 @@ from utils.const import INTERNAL_SERVER_ERROR
 from .models import UserAccount
 
 
+class TestApiView(APIView):
+    def get(self, request):
+        print("hello world")
+
+        return Response(status=HTTP_200_OK)
+
+
 class CustomProviderAuthView(ProviderAuthView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
