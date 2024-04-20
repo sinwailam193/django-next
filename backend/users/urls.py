@@ -5,11 +5,9 @@ from .views import (
     CustomTokenVerifyView,
     LogoutView,
     CustomProviderAuthView,
-    TestApiView,
 )
 
 urlpatterns = [
-    path("test/", TestApiView.as_view()),
     re_path(
         r"^o/(?P<provider>\S+)/$",
         CustomProviderAuthView.as_view(),

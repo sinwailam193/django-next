@@ -20,10 +20,13 @@ from .models import UserAccount
 
 
 class TestApiView(APIView):
-    def get(self, request):
+    authentication_classes = []  # disables authentication
+    permission_classes = []  # disables permission
+
+    def get(self, request, *args, **kwargs):
         print("hello world")
 
-        return Response(status=HTTP_200_OK)
+        return Response("awesome", status=HTTP_200_OK)
 
 
 class CustomProviderAuthView(ProviderAuthView):

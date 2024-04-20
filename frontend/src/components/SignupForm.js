@@ -1,48 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
+import { useRegister } from "@/hooks";
 import { Spinner } from "@/components/common";
-import { useRegisterMutation } from "@/slice/features/authApiSlice";
 
 export default function SignupForm() {
-    const router = useRouter();
-    const [register, { isLoading }] = useRegisterMutation();
-    const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-    });
-
-    const { firstName, lastName, email, password, confirmPassword } = formData;
-
-    function handleChange(event) {
-        const { value, name } = event.target;
-
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    }
-
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        register(formData)
-            .unwrap()
-            .then(() => {
-                toast.success("Please check email to verify account.");
-                router.push("/auth/login");
-            })
-            .catch(() => {
-                toast.error("Failed to register account.");
-            });
-    }
+    const {
+        firstName,
+        lastName,
+        email,
+        password,
+        confirmPassword,
+        isLoading,
+        handleChange,
+        handleSubmit,
+    } = useRegister();
 
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

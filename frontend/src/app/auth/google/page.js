@@ -1,4 +1,4 @@
-export default function Register() {
+export default function GoogleAuth() {
     return (
         <main>
             <h1>Google page</h1>
