@@ -14,6 +14,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,  # refresh token view
     TokenVerifyView,  # verify token view
 )
+
 from utils.cookies import set_cookie
 from utils.const import INTERNAL_SERVER_ERROR
 from .models import UserAccount
