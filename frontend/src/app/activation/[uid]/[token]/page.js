@@ -1,7 +1,5 @@
-export default function Activation() {
-    return (
-        <main>
-            <h1>Activation page</h1>
-        </main>
-    );
+import AccountActivation from "@/components/AccountActivation";
+
+export default function Activation({ params }) {
+    return <AccountActivation params={params} />;
 }
