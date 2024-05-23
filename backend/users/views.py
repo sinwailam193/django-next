@@ -47,7 +47,7 @@ class CustomProviderAuthView(ProviderAuthView):
             refresh_token = response.data.get("refresh")
             set_cookie(response, access_token=access_token, refresh_token=refresh_token)
 
-        return Response(status=HTTP_204_NO_CONTENT)
+        return response
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -67,7 +67,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             refresh_token = response.data.get("refresh")
             set_cookie(response, access_token=access_token, refresh_token=refresh_token)
 
-        return Response(status=HTTP_204_NO_CONTENT)
+        return response
 
 
 class CustomTokenRefreshView(TokenRefreshView):
