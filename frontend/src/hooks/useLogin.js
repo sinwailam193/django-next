@@ -26,18 +26,16 @@ export default function useLogin() {
         });
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
 
-        login(formData)
-            .unwrap()
-            .then(() => {
-                dispatch(setAuth());
-                router.push("/dashboard");
-            })
-            .catch(() => {
-                toast.error("Failed to log in.");
-            });
+        try {
+            await login(formData).unwrap();
+            dispatch(setAuth());
+            router.push("/dashboard");
+        } catch (err) {
+            toast.error("Failed to log in.");
+        }
     }
 
     return {
