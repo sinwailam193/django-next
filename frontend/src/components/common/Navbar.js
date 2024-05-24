@@ -2,7 +2,7 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
     Disclosure,
     DisclosureButton,
@@ -12,21 +12,60 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useLogoutMutation } from "@/slice/features/authApiSlice";
 import { logout as setLogout } from "@/slice/features/authSlice";
 
+import {
+    LOGIN_PATHNAME,
+    REGISTER_PATHNAME,
+    DASHBOARD_PATHNAME,
+} from "@/utils/const";
+import { NavLink } from "@/components/common";
+
 export default function Navbar() {
     const dispatch = useDispatch();
+    const pathname = usePathname();
     const router = useRouter();
     const [logout] = useLogoutMutation();
+    const isAuthLoading = useSelector((state) => state.auth.isLoading);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
     function handleLogout() {
         logout()
             .unwrap()
             .then(() => dispatch(setLogout()))
-            .finally(() => router.push("/"));
+            .finally(() => router.push("/auth/login"));
     }
 
-    const authLinks = <div>AUTH LINKS</div>;
-    const guestLinks = <div>GUEST LINKS</div>;
+    const authLinks = (isMobile) => (
+        <>
+            <NavLink
+                isSelected={pathname === DASHBOARD_PATHNAME}
+                isMobile={isMobile}
+                href={DASHBOARD_PATHNAME}
+            >
+                Dashboard
+            </NavLink>
+            <NavLink isMobile={isMobile} onClick={handleLogout}>
+                Logout
+            </NavLink>
+        </>
+    );
+    const guestLinks = (isMobile) => (
+        <>
+            <NavLink
+                isSelected={pathname === LOGIN_PATHNAME}
+                isMobile={isMobile}
+                href={LOGIN_PATHNAME}
+            >
+                Login
+            </NavLink>
+            <NavLink
+                isSelected={pathname === REGISTER_PATHNAME}
+                isMobile={isMobile}
+                href={REGISTER_PATHNAME}
+            >
+                Register
+            </NavLink>
+        </>
+    );
 
     return (
         <Disclosure as="nav" className="bg-gray-800">
@@ -56,28 +95,31 @@ export default function Navbar() {
                             </div>
                             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                                 <div className="flex flex-shrink-0 items-center">
-                                    <Link
-                                        className="text-gray-300 rounded-md px-3 py-2 font-medium"
-                                        href="/"
-                                    >
+                                    <NavLink isBanner={true} href="/">
                                         Django Next
-                                    </Link>
+                                    </NavLink>
                                 </div>
-                                <div className="hidden sm:ml-6 sm:block">
-                                    <div className="flex space-x-4">
-                                        {isAuthenticated
-                                            ? authLinks
-                                            : guestLinks}
+                                {!isAuthLoading && (
+                                    <div className="hidden sm:ml-6 sm:block">
+                                        <div className="flex space-x-4">
+                                            {isAuthenticated
+                                                ? authLinks(false)
+                                                : guestLinks(false)}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
 
                     <DisclosurePanel className="sm:hidden">
-                        <div className="space-y-1 px-2 pb-3 pt-2">
-                            {isAuthenticated ? authLinks : guestLinks}
-                        </div>
+                        {!isAuthLoading && (
+                            <div className="space-y-1 px-2 pb-3 pt-2">
+                                {isAuthenticated
+                                    ? authLinks(true)
+                                    : guestLinks(true)}
+                            </div>
+                        )}
                     </DisclosurePanel>
                 </>
             )}
