@@ -1,11 +1,13 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import { Spinner } from "@/components/common";
 
 export default function RequireAuth({ children }) {
+    const router = useRouter();
     const { isLoading, isAuthenticated } = useSelector((state) => state.auth);
 
     if (isLoading) {
@@ -17,7 +19,9 @@ export default function RequireAuth({ children }) {
     }
 
     if (!isAuthenticated) {
-        redirect("/auth/login");
+        toast.error("Must be logged in");
+        router.push("/auth/login");
+        return null;
     }
 
     return children;

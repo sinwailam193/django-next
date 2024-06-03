@@ -1,7 +1,6 @@
 import { Spinner } from "@/components/common";
 
 export default function List({ config }) {
-    console.log(config);
     return (
         <ul role="list" className="divide-y divide-gray-100">
             {config.map(({ label, value }, i) => (
