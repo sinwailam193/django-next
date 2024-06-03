@@ -20,5 +20,5 @@ export default function RequireAuth({ children }) {
         redirect("/auth/login");
     }
 
-    return <>{children}</>;
+    return children;
 }
