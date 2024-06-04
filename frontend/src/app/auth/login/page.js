@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import LoginForm from "@/components/LoginForm";
+import { SocialButton } from "@/components/common";
 
 export const metadata = {
     title: "Login",
@@ -23,6 +24,7 @@ export default function Login() {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <LoginForm />
+                <SocialButton />
 
                 <p className="mt-10 text-center text-sm text-gray-500">
                     Don&apos;t have an account?{" "}

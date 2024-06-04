@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import SignupForm from "@/components/SignupForm";
+import { SocialButton } from "@/components/common";
 
 export const metadata = {
     title: "Register",
@@ -23,6 +24,7 @@ export default function Register() {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <SignupForm />
+                <SocialButton />
 
                 <p className="mt-10 text-center text-sm text-gray-500">
                     Already have an account?{" "}
